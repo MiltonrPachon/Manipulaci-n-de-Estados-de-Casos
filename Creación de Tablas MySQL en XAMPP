@@ -1,0 +1,60 @@
+-- =====================================
+-- CREACIÓN DE TABLAS DE MANERA LOCAL EN XAMPP
+-- =====================================
+
+CREATE TABLE equipos (
+    id_equipo INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_equipo VARCHAR(100) NOT NULL,
+    marca VARCHAR(50) NOT NULL,
+    modelo VARCHAR(50) NOT NULL,
+    serial VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE datos_personales (
+    id_datos INT AUTO_INCREMENT PRIMARY KEY,
+    cedula VARCHAR(20) NOT NULL,
+    nombre_completo VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20),
+    correo VARCHAR(100),
+    id_equipo INT,
+    FOREIGN KEY (id_equipo) REFERENCES equipos(id_equipo)
+);
+
+CREATE TABLE users (
+    id_user INT AUTO_INCREMENT PRIMARY KEY,
+    id_identity VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    tipo_usuario ENUM('administrador', 'usuario', 'tecnico') NOT NULL,
+    id_datos INT,
+    FOREIGN KEY (id_datos) REFERENCES datos_personales(id_datos)
+);
+
+CREATE TABLE casos (
+    id_caso INT AUTO_INCREMENT PRIMARY KEY,
+    codigo_caso VARCHAR(20) NOT NULL,
+    id_usuario INT NOT NULL,
+    tipo_caso ENUM('incidencia', 'solicitud') NOT NULL,
+    estado ENUM('pendiente', 'proceso', 'resuelto') NOT NULL,
+    asunto VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    prioridad ENUM('baja', 'media', 'alta') NOT NULL,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES users(id_user)
+);
+
+CREATE TABLE comentarios (
+    id_comentario INT AUTO_INCREMENT PRIMARY KEY,
+    id_caso INT NOT NULL,
+    id_tecnico INT NOT NULL,
+    texto TEXT,
+    fecha_comentario DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_caso) REFERENCES casos(id_caso),
+    FOREIGN KEY (id_tecnico) REFERENCES users(id_user)
+);
+
+-- =====================================
+-- INSERCIÓN DEL ADMINISTRADOR
+-- =====================================
+
+INSERT INTO users (id_identity, password, tipo_usuario, id_datos)
+VALUES ('admin', '1234', 'administrador', NULL);
