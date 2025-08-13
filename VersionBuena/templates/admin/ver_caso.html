@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Detalle del Caso</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <header>
+    <h1>📁 Caso #{{ caso.codigo_caso }}</h1>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn-volver">⬅️ Volver al Dashboard</a>
+  </header>
+
+  <main class="seccion">
+    <div class="card-caso">
+      <h2>📄 Información del Caso</h2>
+      <p><strong>Asunto:</strong> {{ caso.asunto }}</p>
+      <p><strong>Descripción:</strong> {{ caso.descripcion }}</p>
+      <p><strong>Estado:</strong> 
+        <span class="estado {{ caso.estado|lower }}">{{ caso.estado }}</span>
+      </p>
+      <p><strong>Fecha de creación:</strong> {{ caso.fecha_creacion }}</p>
+    </div>
+
+    <div class="card-caso">
+      <h2>🧑 Usuario</h2>
+      <p><strong>Nombre:</strong> {{ caso.nombre_completo }}</p>
+      <p><strong>Teléfono:</strong> {{ caso.telefono }}</p>
+      <p><strong>Correo:</strong> {{ caso.correo }}</p>
+    </div>
+
+    <div class="card-caso">
+      <h2>💻 Equipo</h2>
+      {% if caso.nombre_equipo %}
+        <p><strong>Nombre:</strong> {{ caso.nombre_equipo }}</p>
+        <p><strong>Marca:</strong> {{ caso.marca }}</p>
+        <p><strong>Modelo:</strong> {{ caso.modelo }}</p>
+        <p><strong>Serial:</strong> {{ caso.serial }}</p>
+      {% else %}
+        <p><em>No hay equipo asociado.</em></p>
+      {% endif %}
+    </div>
+  </main>
+</body>
+</html>

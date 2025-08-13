@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Administrador</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+<header>
+  <h1>📊 Dashboard - Administrador</h1>
+  <p>Bienvenido, {{ session['user']['id_identity'] }}</p>
+  <form method="GET" action="{{ url_for('logout') }}" style="display:inline;">
+    <button type="submit">🔓 Cerrar sesión</button>
+  </form>
+</header>
+
+<main class="dashboard">
+  <section class="cards">
+    <div class="card">
+      <h3>👥 Usuarios Registrados</h3>
+      <p>{{ total_usuarios }}</p>
+    </div>
+    <div class="card">
+      <h3>🛠 Técnicos Activos</h3>
+      <p>{{ total_tecnicos }}</p>
+    </div>
+    <div class="card">
+      <h3>📂 Casos Totales</h3>
+      <p>{{ total_casos }}</p>
+    </div>
+  </section>
+
+  <section class="search-bar">
+    <form method="GET" action="{{ url_for('admin.dashboard') }}">
+      <input type="text" name="q" placeholder="Buscar por cédula..." value="{{ query or '' }}">
+      <button type="submit">🔍 Buscar</button>
+    </form>
+  </section>
+
+  {% if query %}
+  <section class="search-results">
+    <h2>🔎 Resultados para "{{ query }}"</h2>
+
+    <h3>Usuarios</h3>
+    {% if usuarios %}
+      <ul>
+        {% for u in usuarios %}
+          <li>
+            <strong>{{ u.nombre_completo }}</strong> ({{ u.id_identity }}) - {{ u.tipo_usuario }}<br>
+            📧 {{ u.correo }} | 📞 {{ u.telefono }}<br>
+            🖥️ Equipo: {{ u.nombre_equipo or 'No asignado' }}<br>
+            {% if u.nombre_equipo %}
+              🔧 Marca: {{ u.marca }}, Modelo: {{ u.modelo }}, Serial: {{ u.serial }}
+            {% endif %}
+            <form action="{{ url_for('admin.eliminar_usuario') }}" method="POST" style="margin-top: 10px;">
+              <input type="hidden" name="id_identity" value="{{ u.id_identity }}">
+              <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este usuario?');">🗑️ Eliminar</button>
+            </form>
+          </li>
+          <hr>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No se encontraron usuarios.</p>
+    {% endif %}
+
+    <h3>Casos</h3>
+    {% if casos %}
+      <ul>
+        {% for c in casos %}
+          <li>
+            {% if c.codigo_caso %}
+              <a href="{{ url_for('admin.ver_caso', codigo_caso=c.codigo_caso) }}">
+                {{ c.codigo_caso }} - {{ c.asunto }} ({{ c.estado }})
+              </a>
+            {% else %}
+              <span>{{ c.asunto }} ({{ c.estado }}) — Código no disponible</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No se encontraron casos.</p>
+    {% endif %}
+  </section>
+  {% endif %}
+</main>
+
+<div class="form-toggle" style="display: flex; align-items: center; justify-content: space-between;">
+  <h2>👤 Gestión de Usuarios</h2>
+  <button id="toggle-form-btn" class="toggle-button" type="button" style="font-size: 1.2rem; background: none; border: none; cursor: pointer;">▼</button>
+</div>
+
+<form id="usuarioForm" class="usuario-form" action="{{ url_for('admin.crear_usuario') }}" method="POST">
+  <h3>👤 Crear nuevo usuario</h3>
+
+    <div class="form-group">
+      <label for="id_identity">Cédula</label>
+      <input type="text" name="id_identity" required>
+    </div>
+
+    <div class="form-group">
+      <label for="nombre_completo">Nombre completo</label>
+      <input type="text" name="nombre_completo" required>
+    </div>
+
+    <div class="form-group">
+      <label for="telefono">Teléfono</label>
+      <input type="text" name="telefono">
+    </div>
+
+    <div class="form-group">
+      <label for="correo">Correo electrónico</label>
+      <input type="email" name="correo">
+    </div>
+
+    <div class="form-group">
+      <label for="nombre_equipo">Nombre del equipo</label>
+      <input type="text" name="nombre_equipo">
+    </div>
+
+    <div class="form-group">
+      <label for="marca">Marca</label>
+      <input type="text" name="marca">
+    </div>
+
+    <div class="form-group">
+      <label for="modelo">Modelo</label>
+      <input type="text" name="modelo">
+    </div>
+
+    <div class="form-group">
+      <label for="serial">Serial</label>
+      <input type="text" name="serial">
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <input type="password" name="password" required>
+    </div>
+
+    <div class="form-group">
+      <label for="tipo_usuario">Rol</label>
+      <select name="tipo_usuario" required>
+        <option value="">Selecciona un rol</option>
+        <option value="administrador">Administrador</option>
+        <option value="tecnico">Técnico</option>
+        <option value="usuario">Usuario</option>
+      </select>
+    </div>
+
+    <button type="submit">✅ Crear usuario</button>
+  </form>
+  <hr>
+
+  <h3>Usuarios registrados</h3>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Cédula</th>
+        <th>Nombre</th>
+        <th>Rol</th>
+        <th>Correo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in todos_usuarios %}
+        <tr>
+          <td>{{ u.id_identity }}</td>
+          <td>{{ u.nombre_completo }}</td>
+          <td>{{ u.tipo_usuario }}</td>
+          <td>{{ u.correo }}</td>
+          <td>
+            <form action="{{ url_for('admin.eliminar_usuario') }}" method="POST" style="display:inline;">
+              <input type="hidden" name="id_identity" value="{{ u.id_identity }}">
+              <button type="submit">🗑️ Eliminar</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggleBtn = document.getElementById('toggle-form-btn');
+    const form = document.getElementById('usuarioForm');
+
+    toggleBtn.addEventListener('click', () => {
+      const visible = form.style.display === 'block';
+      form.style.display = visible ? 'none' : 'block';
+      toggleBtn.textContent = visible ? '▼' : '▲';
+    });
+  });
+</script>
+
+<div class="imagen-flotante">
+  <img src="{{ url_for('static', filename='img/tecnico.png') }}" alt="Técnico flotante">
+</div>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Casos en Proceso</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estados.css') }}">
+</head>
+<body>
+
+  <header class="estado-header">
+    <h1>🔄 Casos en Proceso - Prioridad: {{ prioridad.capitalize() }}</h1>
+    <a class="volver" href="{{ url_for('tecnico.dashboard') }}">🏠 Volver al Dashboard</a>
+  </header>
+
+  <section class="filtro-prioridad">
+    <form method="GET" action="{{ url_for('tecnico.proceso') }}">
+      <label for="prioridad">🔽 Filtrar por prioridad:</label>
+      <select name="prioridad" id="prioridad" onchange="this.form.submit()">
+        <option value="alta" {% if prioridad == 'alta' %}selected{% endif %}>🔴 Alta</option>
+        <option value="media" {% if prioridad == 'media' %}selected{% endif %}>🟡 Media</option>
+        <option value="baja" {% if prioridad == 'baja' %}selected{% endif %}>🟢 Baja</option>
+      </select>
+    </form>
+  </section>
+
+  <main class="seccion">
+    {% if casos %}
+      <table class="tabla-casos">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Asunto</th>
+            <th>Prioridad</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Ver</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for caso in casos %}
+          <tr class="fila-{{ caso.prioridad }}">
+            <td>{{ caso.codigo_caso or 'N/A' }}</td>
+            <td>{{ caso.asunto }}</td>
+            <td>{{ caso.prioridad.capitalize() }}</td>
+            <td>{{ caso.fecha_creacion }}</td>
+            <td>{{ caso.estado }}</td>
+            <td>
+              {% if caso.codigo_caso %}
+                <a class="btn-ver" href="{{ url_for('tecnico.ver_caso_proceso', codigo_caso=caso.codigo_caso) }}">👁️ Ver</a>
+              {% else %}
+                <span>No disponible</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p style="text-align: center;">🚫 No hay casos con prioridad <strong>{{ prioridad }}</strong>.</p>
+    {% endif %}
+  </main>
+
+</body>
+</html>

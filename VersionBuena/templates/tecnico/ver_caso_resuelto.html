@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle del Caso</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ver_caso.css') }}">
+</head>
+<body>
+
+<header>
+  <h1>Detalle del Caso - {{ caso.codigo_caso }}</h1>
+</header>
+
+<div class="volver">
+  <a href="{{ url_for('tecnico.resueltos') }}">⬅ Volver a Casos Resueltos</a>
+</div>
+
+<div class="contenedor">
+  <!-- Usuario -->
+  <div class="usuario">
+    <h2>Información del Usuario</h2>
+    <ul>
+      <li><strong>Identificación:</strong> {{ usuario.id_identity }}</li>
+      <li><strong>Nombre:</strong> {{ usuario.nombre_completo }}</li>
+      <li><strong>Teléfono:</strong> {{ usuario.telefono }}</li>
+      <li><strong>Correo:</strong> {{ usuario.correo }}</li>
+      <li><strong>Tipo de Usuario:</strong> {{ usuario.tipo_usuario }}</li>
+      <li><strong>Equipo:</strong> {{ usuario.nombre_equipo }}</li>
+      <li><strong>Marca:</strong> {{ usuario.marca }}</li>
+      <li><strong>Modelo:</strong> {{ usuario.modelo }}</li>
+      <li><strong>Serial:</strong> {{ usuario.serial }}</li>
+    </ul>
+  </div>
+
+  <!-- Caso -->
+  <div class="caso">
+    <h2>Información del Caso</h2>
+    <div class="caso-item"><label>Tipo de Caso:</label><p>{{ caso.tipo_caso | capitalize }}</p></div>
+    <div class="caso-item"><label>Estado:</label><p>{{ caso.estado }}</p></div>
+    <div class="caso-item"><label>Asunto:</label><p>{{ caso.asunto }}</p></div>
+    <div class="caso-item"><label>Descripción:</label><p>{{ caso.descripcion }}</p></div>
+    <div class="caso-item"><label>Prioridad:</label><p>{{ caso.prioridad }}</p></div>
+    <div class="caso-item"><label>Fecha de Creación:</label><p>{{ caso.fecha_creacion }}</p></div>
+
+    <form method="POST" action="{{ url_for('tecnico.ver_caso_resuelto', codigo_caso=caso.codigo_caso) }}">
+      <div class="form-comentario">
+        <label for="comentario"><strong>Agregar Comentario:</strong></label>
+        <textarea name="comentario" id="comentario" rows="4"></textarea>
+      </div>
+
+      <div class="botones-estado">
+        <button type="submit" name="accion" value="pendiente" class="pendiente">🔄 Pendiente</button>
+        <button type="submit" name="accion" value="proceso" class="proceso">🚧 En Proceso</button>
+        <button type="submit" name="accion" value="resuelto" class="resuelto">✅ Resuelto</button>
+        <button type="submit" name="accion" value="comentar" class="comentar">💬 Comentar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if comentarios %}
+  <div class="comentarios">
+    <h2>🗒️ Historial de Comentarios</h2>
+    <ul>
+      {% for comentario in comentarios %}
+        <li class="comentario-item">
+          <strong>{{ comentario.fecha_comentario }} - {{ comentario.tecnico }}:</strong>
+          <span class="comentario-texto">{{ comentario.texto }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+</body>
+</html>

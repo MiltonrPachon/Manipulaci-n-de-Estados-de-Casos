@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard de Casos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!-- Header con Logo y Sesión -->
+  <header class="tecnico-header">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <img src="{{ url_for('static', filename='img/Logo.jpg') }}" alt="Logo HelpDesk" style="width: 50px; height: 50px; border-radius: 50%;">
+      <h1>HelpDesk Asistente</h1>
+    </div>
+    <div class="info-user">
+      <span>👤 {{ session['user']['id_identity'] }}</span>
+      <form method="GET" action="{{ url_for('tecnico.logout') }}">
+        <button class="btn-logout" type="submit">🔓 Cerrar sesión</button>
+      </form>
+    </div>
+  </header>
+
+  <!-- Buscador -->
+  <section class="busqueda-seccion">
+    <form method="GET" action="{{ url_for('tecnico.dashboard') }}">
+      <input type="text" name="q" placeholder="🔍 Buscar por nombre o número de caso..." value="{{ query or '' }}">
+      <button type="submit">Buscar</button>
+    </form>
+  </section>
+
+  <!-- Resultados si existen -->
+  {% if usuarios or casos %}
+  <section class="resultados">
+    {% if usuarios %}
+      <h2>👥 Usuarios Encontrados</h2>
+      <ul>
+        {% for u in usuarios %}
+          <li>
+            <strong>{{ u.nombre_completo }}</strong> - {{ u.telefono }} - {{ u.correo }}<br>
+            💻 {{ u.nombre_equipo }} | {{ u.marca }} | {{ u.modelo }} | {{ u.serial }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if casos %}
+      <h2>📂 Casos Encontrados</h2>
+      <ul>
+        {% for c in casos %}
+          <li>
+            <a href="{{ url_for('tecnico.ver_caso', codigo_caso=c.codigo_caso) }}">
+              <strong>#{{ c.codigo_caso }}</strong> - {{ c.estado }} - {{ c.asunto }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <!-- Casos por Estado -->
+  <section class="seccion">
+    <div class="titulo-seccion">📊 Casos por Estado</div>
+    <div class="cards">
+      <a href="{{ url_for('tecnico.pendientes') }}" class="card pendiente">
+        <div class="estado-nombre">Pendientes</div>
+        <div class="estado-cantidad">{{ pendientes }}</div>
+      </a>
+      <a href="{{ url_for('tecnico.proceso') }}" class="card proceso">
+        <div class="estado-nombre">En Proceso</div>
+        <div class="estado-cantidad">{{ proceso }}</div>
+      </a>
+      <a href="{{ url_for('tecnico.resueltos') }}" class="card resuelto">
+        <div class="estado-nombre">Resueltos</div>
+        <div class="estado-cantidad">{{ resueltos }}</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Gráficas -->
+  <section class="seccion">
+    <div class="titulo-seccion">📈 Gráficas</div>
+    <div class="graficas">
+      <div class="grafica">
+        <h4>Distribución de Casos</h4>
+        <img src="data:image/png;base64,{{ piechart }}" alt="Gráfico de Distribución">
+      </div>
+      <div class="grafica">
+        <h4>Casos por Estado</h4>
+        <img src="data:image/png;base64,{{ barchart }}" alt="Gráfico de Barras">
+      </div>
+      <div class="grafica">
+        <h4>Tendencia de Casos</h4>
+        <img src="data:image/png;base64,{{ linechart }}" alt="Gráfico de Línea">
+      </div>
+    </div>
+  </section>
+
+<div class="imagen-flotante">
+  <img src="{{ url_for('static', filename='img/tecnico.png') }}" alt="Técnico flotante">
+</div>
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #dfe9f3, #ffffff);
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* === Header Técnico === */
+.tecnico-header {
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.tecnico-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.info-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-logout {
+  background-color: #e74c3c;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-logout:hover {
+  background-color: #c0392b;
+}
+
+/* === Busqueda === */
+.busqueda-seccion {
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.busqueda-seccion form {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.busqueda-seccion input {
+  padding: 0.8rem 1rem;
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 280px;
+}
+
+.busqueda-seccion button {
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.busqueda-seccion button:hover {
+  background-color: #1d5ed0;
+}
+
+/* === Secciones === */
+.seccion {
+  margin: 40px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 16px;
+  width: 95%;
+  max-width: 1200px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #6a11cb;
+}
+
+.titulo-seccion {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #333;
+  border-bottom: 3px solid #ccc;
+  padding-bottom: 5px;
+}
+
+/* === Cards de Estado === */
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.card {
+  padding: 20px 25px;
+  border-radius: 15px;
+  width: 200px;
+  background-color: #fafafa;
+  text-decoration: none;
+  color: #222;
+  font-weight: bold;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+  text-align: center;
+  border-bottom: 5px solid transparent;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card.pendiente { border-bottom: 5px solid orange; }
+.card.proceso { border-bottom: 5px solid dodgerblue; }
+.card.resuelto { border-bottom: 5px solid seagreen; }
+
+.estado-nombre {
+  font-size: 1.2rem;
+  color: #444;
+}
+
+.estado-cantidad {
+  font-size: 2.4rem;
+  margin-top: 5px;
+  color: #222;
+}
+
+/* === Gráficas === */
+.graficas {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 25px;
+  margin-top: 2rem;
+}
+
+.grafica {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  width: 100%;
+  max-width: 360px;
+  flex: 1 1 300px;
+}
+
+.grafica img {
+  width: 100%;
+  height: 260px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.grafica h4 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+/* === Resultados búsqueda === */
+.resultados {
+  margin: 2rem auto;
+  max-width: 1000px;
+  text-align: left;
+  padding: 1.5rem;
+}
+
+.resultados h2 {
+  margin-bottom: 1rem;
+  color: #2575fc;
+}
+
+.resultados ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.resultados li {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.resultados a {
+  text-decoration: none;
+  color: #2575fc;
+  font-weight: 600;
+}
+
+.resultados a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Imagen Flotante Inferior Derecha ===== */
+.imagen-flotante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+.imagen-flotante img {
+  width: 80px;
+  height: auto;
+  border-radius: 50%;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.imagen-flotante img:hover {
+  transform: scale(1.1);
+}
